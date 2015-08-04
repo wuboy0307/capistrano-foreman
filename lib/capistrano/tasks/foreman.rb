@@ -40,7 +40,12 @@ namespace :foreman do
   desc 'Restart the application services'
   task :restart do
     on roles fetch(:foreman_roles) do
-      foreman_exec :restart, fetch(:foreman_app)
+      begin
+        foreman_exec :stop, fetch(:foreman_app)
+      rescue
+        puts("no instance, no need to stop")
+      end
+      foreman_exec :start, fetch(:foreman_app)
     end
   end
 
